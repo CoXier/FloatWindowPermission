@@ -11,10 +11,8 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
@@ -24,11 +22,10 @@ import java.lang.reflect.Method;
 public class Rom {
     private static final String TAG = "Rom";
 
-    public static final String ROM_MIUI = "MIUI"; // 小米
-    public static final String ROM_EMUI = "EMUI"; // 华为
-    public static final String ROM_FLYME = "FLYME"; // 魅族
-    public static final String ROM_QIKU = "QIKU"; // 360
-    public static final String ROM_OTHER = "OTHER"; // 其他 rom
+    /** Value used for when a build property is unknown. */
+    private static final String UNKNOWN = "unknown";
+
+    private static final int OP_SYSTEM_ALERT_WINDOW = 24;
 
     private static final String KEY_VERSION_MIUI = "ro.miui.ui.version.name";
     private static final String KEY_VERSION_EMUI = "ro.build.version.emui";
@@ -60,7 +57,7 @@ public class Rom {
         final int version = Build.VERSION.SDK_INT;
         if (version >= 19 && version < 23) {
             // Android 4.4 ~ 5.1 使用反射检查权限
-            return checkOp(context, 24); //OP_SYSTEM_ALERT_WINDOW = 24;
+            return checkOp(context, OP_SYSTEM_ALERT_WINDOW);
         }else if (version >= 23){
             try {
                 // Android 6.0 之后 google 进行了统一
@@ -96,32 +93,23 @@ public class Rom {
     }
 
     /**
-     * 获取系统属性，http://adbshell.com/commands/adb-shell-getprop
-     * @param propName
+     * 获取系统属性
+     * @param property
      * @return
      */
-    // TODO: lijianxin 2017/8/16 使用反射拿到属性
-    static String getSystemProperty(String propName) {
-        String line;
-        BufferedReader input = null;
+    static String getSystemProperty(String property) {
         try {
-            Process p = Runtime.getRuntime().exec("getprop " + propName);
-            input = new BufferedReader(new InputStreamReader(p.getInputStream()), 1024);
-            line = input.readLine();
-            input.close();
-        } catch (IOException ex) {
-            Log.e(TAG, "Unable to read sysprop " + propName, ex);
-            return null;
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    Log.e(TAG, "Exception while closing InputStream", e);
-                }
-            }
+            Method m = Build.class.getDeclaredMethod("getString", String.class);
+            m.setAccessible(true);
+            return (String) m.invoke(null, property);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
         }
-        return line;
+        return UNKNOWN;
     }
 
     /**
