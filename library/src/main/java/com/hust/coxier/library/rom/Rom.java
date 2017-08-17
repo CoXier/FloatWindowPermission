@@ -138,7 +138,7 @@ public class Rom {
     }
 
     private static boolean isFleme(){
-        String flymeOSFlag = getSystemProperty("ro.build.display.id");
+        String flymeOSFlag = Build.DISPLAY;
         return !TextUtils.isEmpty(flymeOSFlag) && (flymeOSFlag.contains("flyme") ||
                 flymeOSFlag.toLowerCase().contains("flyme"));
     }
