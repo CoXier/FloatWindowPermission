@@ -40,7 +40,7 @@ public class MiuiRoom extends Rom {
      * @return miui rom version code, if fail , return -1
      */
     public static int getMiuiVersion() {
-        String version = getSystemProperty("ro.miui.ui.version.name");
+        String version = getSystemProperty(KEY_VERSION_MIUI);
         if (version != null) {
             try {
                 return Integer.parseInt(version.substring(1));

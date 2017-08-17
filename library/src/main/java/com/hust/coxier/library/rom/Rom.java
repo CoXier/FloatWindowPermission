@@ -25,10 +25,10 @@ public class Rom {
     /** Value used for when a build property is unknown. */
     private static final String UNKNOWN = "unknown";
 
-    private static final int OP_SYSTEM_ALERT_WINDOW = 24;
+    protected static final int OP_SYSTEM_ALERT_WINDOW = 24;
 
-    private static final String KEY_VERSION_MIUI = "ro.miui.ui.version.name";
-    private static final String KEY_VERSION_EMUI = "ro.build.version.emui";
+    protected static final String KEY_VERSION_MIUI = "ro.miui.ui.version.name";
+    protected static final String KEY_VERSION_EMUI = "ro.build.version.emui";
 
     /**
      * 申请悬浮窗权限,对于大多数的 rom 来说，只有6.0之后才需要申请权限
