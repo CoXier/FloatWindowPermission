@@ -25,10 +25,8 @@ public class MiuiRoom extends Rom {
         int versionCode = getMiuiVersion();
         if (versionCode == 5) {
             startPermissionActivityV5(context);
-        } else if (versionCode == 6) {
-            startPermissionActivityV6(context);
-        } else if (versionCode == 7) {
-            startPermissionActivityV7(context);
+        } else if (versionCode == 6 || versionCode == 7) {
+            startPermissionActivityV67(context);
         } else if (versionCode == 8) {
             startPermissionActivityV8(context);
         } else {
@@ -70,25 +68,9 @@ public class MiuiRoom extends Rom {
     }
 
     /**
-     * 小米 V6 版本 ROM权限申请
+     * 小米 V6 V7 版本 ROM权限申请
      */
-    public void startPermissionActivityV6(Context context) {
-        Intent intent = new Intent("miui.intent.action.APP_PERM_EDITOR");
-        intent.setClassName("com.miui.securitycenter", "com.miui.permcenter.permissions.AppPermissionsEditorActivity");
-        intent.putExtra("extra_pkgname", context.getPackageName());
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-        if (isIntentAvailable(intent, context)) {
-            context.startActivity(intent);
-        } else {
-            Log.e(TAG, "Intent is not available!");
-        }
-    }
-
-    /**
-     * 小米 V7 版本 ROM权限申请
-     */
-    public void startPermissionActivityV7(Context context) {
+    public void startPermissionActivityV67(Context context) {
         Intent intent = new Intent("miui.intent.action.APP_PERM_EDITOR");
         intent.setClassName("com.miui.securitycenter", "com.miui.permcenter.permissions.AppPermissionsEditorActivity");
         intent.putExtra("extra_pkgname", context.getPackageName());
@@ -127,9 +109,12 @@ public class MiuiRoom extends Rom {
     }
 
     private boolean isIntentAvailable(Intent intent, Context context) {
-        if (intent == null) {
+        if (intent == null || context == null) {
             return false;
         }
-        return context.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).size() > 0;
+        PackageManager packageManager = context.getPackageManager();
+        return packageManager != null &&
+                packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).size() > 0;
+
     }
 }
