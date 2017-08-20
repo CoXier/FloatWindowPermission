@@ -107,14 +107,4 @@ public class MiuiRoom extends Rom {
             }
         }
     }
-
-    private boolean isIntentAvailable(Intent intent, Context context) {
-        if (intent == null || context == null) {
-            return false;
-        }
-        PackageManager packageManager = context.getPackageManager();
-        return packageManager != null &&
-                packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).size() > 0;
-
-    }
 }
