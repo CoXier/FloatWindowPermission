@@ -22,11 +22,6 @@ public class FlymeRom extends Rom {
 
     @Override
     public void requestFloatPermission(Context context) {
-        if (Build.VERSION.SDK_INT >= 23) {
-            super.requestFloatPermission(context);
-            return;
-        }
-        // Android 6.0 以下特殊适配
         Intent intent = new Intent("com.meizu.safe.security.SHOW_APPSEC");
         intent.setClassName("com.meizu.safe", "com.meizu.safe.security.AppSecActivity");
         intent.putExtra("packageName", context.getPackageName());

@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
@@ -139,5 +140,15 @@ public class Rom {
     private static boolean isQiku(){
         return Build.MANUFACTURER.contains("QiKU")
                 || Build.MANUFACTURER.contains("360");
+    }
+
+    boolean isIntentAvailable(Intent intent, Context context) {
+        if (intent == null || context == null) {
+            return false;
+        }
+        PackageManager packageManager = context.getPackageManager();
+        return packageManager != null &&
+                packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).size() > 0;
+
     }
 }
