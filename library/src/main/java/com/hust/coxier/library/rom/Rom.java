@@ -59,15 +59,8 @@ public class Rom {
             // Android 4.4 ~ 5.1 使用反射检查权限
             return checkOp(context, OP_SYSTEM_ALERT_WINDOW);
         }else if (version >= 23){
-            try {
-                // Android 6.0 之后 google 进行了统一
-                Class clazz = Settings.class;
-                Method canDrawOverlays = clazz.getDeclaredMethod("canDrawOverlays", Context.class);
-                return (Boolean) canDrawOverlays.invoke(null, context);
-            } catch (Exception e) {
-                Log.e(TAG, Log.getStackTraceString(e));
-                return false;
-            }
+            // Android 6.0 之后 google 进行了统一
+            return Settings.canDrawOverlays(context);
         } else {
             // Android 4.3（API 18 以前，直接返回 true）
             return true;
